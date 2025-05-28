@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Ref3eyG1MF8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ferre\\Documents\\Faculdade\\Ano 2\\Fase 4\\ExeCap07\\Voluta\\Voluta\\Voluta.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ferre\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.22.1-preview.1\\microsoft.visualstudio.azure.containers.tools.targets.1.22.1-preview.1.nupkg.sha512"
+  ],
+  "logs": []
+}
