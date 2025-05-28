@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Voluta.Models
 {
@@ -23,8 +24,22 @@ namespace Voluta.Models
 
         public bool Disponivel { get; set; }
 
-        public DateTime DataCadastro { get; set; }
+        [Required]
+        public DateTime DataCadastro { get; set; } = DateTime.Now;
+
+        [Required]
+        public string AreasInteresseJson { get; set; }
+
+        [NotMapped]
+        public AreaAtuacao[] AreasInteresse
+        {
+            get => string.IsNullOrEmpty(AreasInteresseJson) 
+                ? Array.Empty<AreaAtuacao>() 
+                : System.Text.Json.JsonSerializer.Deserialize<AreaAtuacao[]>(AreasInteresseJson);
+            set => AreasInteresseJson = System.Text.Json.JsonSerializer.Serialize(value);
+        }
 
         public virtual ICollection<Ong> OngsVoluntario { get; set; }
+        public virtual ICollection<SolicitacaoVoluntariado> SolicitacoesVoluntariado { get; set; }
     }
 } 

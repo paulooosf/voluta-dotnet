@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Voluta.Models
 {
@@ -28,13 +29,25 @@ namespace Voluta.Models
         [Required]
         public string Descricao { get; set; }
 
-        public string AreaAtuacao { get; set; }
+        [Required]
+        public string AreasAtuacaoJson { get; set; }
 
+        [NotMapped]
+        public AreaAtuacao[] AreasAtuacao
+        {
+            get => string.IsNullOrEmpty(AreasAtuacaoJson) 
+                ? Array.Empty<AreaAtuacao>() 
+                : System.Text.Json.JsonSerializer.Deserialize<AreaAtuacao[]>(AreasAtuacaoJson);
+            set => AreasAtuacaoJson = System.Text.Json.JsonSerializer.Serialize(value);
+        }
+
+        [Required]
         public string Endereco { get; set; }
 
-        public DateTime DataCadastro { get; set; }
+        [Required]
+        public DateTime DataCadastro { get; set; } = DateTime.Now;
 
-        // Relacionamento com Usuários (voluntários)
         public virtual ICollection<Usuario> Voluntarios { get; set; }
+        public virtual ICollection<SolicitacaoVoluntariado> SolicitacoesVoluntariado { get; set; }
     }
 } 
