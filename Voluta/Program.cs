@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Voluta.Data;
+using Voluta.Repositories;
+using Voluta.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<VolutaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoLocal")));
+
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IOngRepository, OngRepository>();
+builder.Services.AddScoped<ISolicitacaoVoluntariadoRepository, SolicitacaoVoluntariadoRepository>();
+
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IOngService, OngService>();
+builder.Services.AddScoped<ISolicitacaoService, SolicitacaoService>();
 
 builder.Services.AddCors(options =>
 {
