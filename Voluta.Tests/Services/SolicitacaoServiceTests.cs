@@ -7,6 +7,7 @@ using Voluta.Models;
 using Voluta.Repositories;
 using Voluta.Services;
 using Voluta.ViewModels;
+using Voluta.Exceptions;
 using Xunit;
 
 namespace Voluta.Tests.Services
@@ -35,9 +36,9 @@ namespace Voluta.Tests.Services
                 .ReturnsAsync((Ong)null);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
                 () => _solicitacaoService.GetSolicitacoesOngAsync(1, null, 1, 10));
-            Assert.Equal("ONG não encontrada", exception.Message);
+            Assert.Equal("ONG com ID 1 não foi encontrada", exception.Message);
         }
 
         [Fact]
@@ -177,6 +178,70 @@ namespace Voluta.Tests.Services
             Assert.Empty(resultado.Items);
             Assert.Equal(0, resultado.TotalItems);
             Assert.Equal(0, resultado.TotalPages);
+        }
+
+        [Fact]
+        public async Task AprovarSolicitacao_QuandoSolicitacaoNaoExiste_DeveLancarExcecao()
+        {
+            // Arrange
+            _solicitacaoRepositoryMock.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync((SolicitacaoVoluntariado)null);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
+                () => _solicitacaoService.AprovarSolicitacaoAsync(1));
+            Assert.Equal("Solicitação com ID 1 não foi encontrada", exception.Message);
+        }
+
+        [Fact]
+        public async Task AprovarSolicitacao_QuandoSolicitacaoNaoEstaPendente_DeveLancarExcecao()
+        {
+            // Arrange
+            var solicitacao = new SolicitacaoVoluntariado
+            {
+                Id = 1,
+                Status = StatusSolicitacao.Aprovada
+            };
+
+            _solicitacaoRepositoryMock.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync(solicitacao);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ErroNegocio>(
+                () => _solicitacaoService.AprovarSolicitacaoAsync(1));
+            Assert.Equal("Apenas solicitações pendentes podem ser aprovadas", exception.Message);
+        }
+
+        [Fact]
+        public async Task RejeitarSolicitacao_QuandoSolicitacaoNaoExiste_DeveLancarExcecao()
+        {
+            // Arrange
+            _solicitacaoRepositoryMock.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync((SolicitacaoVoluntariado)null);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
+                () => _solicitacaoService.RejeitarSolicitacaoAsync(1));
+            Assert.Equal("Solicitação com ID 1 não foi encontrada", exception.Message);
+        }
+
+        [Fact]
+        public async Task RejeitarSolicitacao_QuandoSolicitacaoNaoEstaPendente_DeveLancarExcecao()
+        {
+            // Arrange
+            var solicitacao = new SolicitacaoVoluntariado
+            {
+                Id = 1,
+                Status = StatusSolicitacao.Aprovada
+            };
+
+            _solicitacaoRepositoryMock.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync(solicitacao);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ErroNegocio>(
+                () => _solicitacaoService.RejeitarSolicitacaoAsync(1));
+            Assert.Equal("Apenas solicitações pendentes podem ser rejeitadas", exception.Message);
         }
     }
 } 

@@ -7,6 +7,7 @@ using Voluta.Models;
 using Voluta.Repositories;
 using Voluta.Services;
 using Voluta.ViewModels;
+using Voluta.Exceptions;
 using Xunit;
 
 namespace Voluta.Tests.Services
@@ -84,9 +85,9 @@ namespace Voluta.Tests.Services
             };
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
                 () => _usuarioService.SolicitarVoluntariadoAsync(1, model));
-            Assert.Equal("Usuário não encontrado", exception.Message);
+            Assert.Equal("Usuário com ID 1 não foi encontrado", exception.Message);
         }
 
         [Fact]
@@ -110,7 +111,7 @@ namespace Voluta.Tests.Services
             };
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(
+            var exception = await Assert.ThrowsAsync<ErroNegocio>(
                 () => _usuarioService.SolicitarVoluntariadoAsync(1, model));
             Assert.Equal("Usuário não está disponível para voluntariado", exception.Message);
         }
@@ -138,9 +139,9 @@ namespace Voluta.Tests.Services
             };
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
                 () => _usuarioService.SolicitarVoluntariadoAsync(1, model));
-            Assert.Equal("ONG não encontrada", exception.Message);
+            Assert.Equal("ONG com ID 1 não foi encontrada", exception.Message);
         }
 
         [Fact]
@@ -174,7 +175,7 @@ namespace Voluta.Tests.Services
             };
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(
+            var exception = await Assert.ThrowsAsync<ErroNegocio>(
                 () => _usuarioService.SolicitarVoluntariadoAsync(1, model));
             Assert.Equal("Já existe uma solicitação pendente para esta ONG", exception.Message);
         }
@@ -235,6 +236,32 @@ namespace Voluta.Tests.Services
             Assert.Equal(StatusSolicitacao.Pendente, resultado.Status);
             Assert.Equal("Teste Usuario", resultado.NomeUsuario);
             Assert.Equal("Teste ONG", resultado.NomeOng);
+        }
+
+        [Fact]
+        public async Task GetUsuarioAsync_QuandoUsuarioNaoExiste_DeveLancarExcecao()
+        {
+            // Arrange
+            _usuarioRepositoryMock.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync((Usuario)null);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
+                () => _usuarioService.GetUsuarioAsync(1));
+            Assert.Equal("Usuário com ID 1 não foi encontrado", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetSolicitacaoAsync_QuandoSolicitacaoNaoExiste_DeveLancarExcecao()
+        {
+            // Arrange
+            _solicitacaoRepositoryMock.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync((SolicitacaoVoluntariado)null);
+
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
+                () => _usuarioService.GetSolicitacaoAsync(1));
+            Assert.Equal("Solicitação com ID 1 não foi encontrada", exception.Message);
         }
     }
 } 

@@ -7,6 +7,7 @@ using Voluta.Models;
 using Voluta.Repositories;
 using Voluta.Services;
 using Voluta.ViewModels;
+using Voluta.Exceptions;
 using Xunit;
 
 namespace Voluta.Tests.Services
@@ -100,17 +101,16 @@ namespace Voluta.Tests.Services
         }
 
         [Fact]
-        public async Task GetOngAsync_QuandoOngNaoExiste_DeveRetornarNull()
+        public async Task GetOngAsync_QuandoOngNaoExiste_DeveLancarExcecao()
         {
             // Arrange
             _ongRepositoryMock.Setup(r => r.GetByIdAsync(1))
                 .ReturnsAsync((Ong)null);
 
-            // Act
-            var resultado = await _ongService.GetOngAsync(1);
-
-            // Assert
-            Assert.Null(resultado);
+            // Act & Assert
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
+                () => _ongService.GetOngAsync(1));
+            Assert.Equal("ONG com ID 1 não foi encontrada", exception.Message);
         }
 
         [Fact]
@@ -121,9 +121,9 @@ namespace Voluta.Tests.Services
                 .ReturnsAsync((Ong)null);
 
             // Act & Assert
-            var exception = await Assert.ThrowsAsync<Exception>(
+            var exception = await Assert.ThrowsAsync<ErroNaoEncontrado>(
                 () => _ongService.GetVoluntariosDisponiveisAsync(1, 1, 10));
-            Assert.Equal("ONG não encontrada", exception.Message);
+            Assert.Equal("ONG com ID 1 não foi encontrada", exception.Message);
         }
 
         [Fact]

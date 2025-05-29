@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Voluta.Models;
 using Voluta.Repositories;
 using Voluta.ViewModels;
+using Voluta.Exceptions;
 
 namespace Voluta.Services
 {
@@ -41,7 +42,7 @@ namespace Voluta.Services
         {
             var ong = await _ongRepository.GetByIdAsync(id);
             if (ong == null)
-                return null;
+                throw new ErroNaoEncontrado($"ONG com ID {id} não foi encontrada");
 
             return OngViewModel.FromOng(ong);
         }
@@ -53,7 +54,7 @@ namespace Voluta.Services
         {
             var ong = await _ongRepository.GetByIdAsync(ongId);
             if (ong == null)
-                throw new Exception("ONG não encontrada");
+                throw new ErroNaoEncontrado($"ONG com ID {ongId} não foi encontrada");
 
             var skip = (pagina - 1) * tamanhoPagina;
             var usuarios = await _usuarioRepository.GetDisponiveisByAreasAsync(ong.AreasAtuacao, skip, tamanhoPagina);

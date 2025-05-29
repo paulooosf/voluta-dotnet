@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Voluta.Models;
 using Voluta.Repositories;
 using Voluta.ViewModels;
+using Voluta.Exceptions;
 
 namespace Voluta.Services
 {
@@ -45,7 +46,7 @@ namespace Voluta.Services
         {
             var usuario = await _usuarioRepository.GetByIdAsync(id);
             if (usuario == null)
-                return null;
+                throw new ErroNaoEncontrado($"Usuário com ID {id} não foi encontrado");
 
             return UsuarioViewModel.FromUsuario(usuario);
         }
@@ -56,18 +57,18 @@ namespace Voluta.Services
         {
             var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
             if (usuario == null)
-                throw new Exception("Usuário não encontrado");
+                throw new ErroNaoEncontrado($"Usuário com ID {usuarioId} não foi encontrado");
 
             if (!usuario.Disponivel)
-                throw new Exception("Usuário não está disponível para voluntariado");
+                throw new ErroNegocio("Usuário não está disponível para voluntariado");
 
             var ong = await _ongRepository.GetByIdAsync(model.OngId);
             if (ong == null)
-                throw new Exception("ONG não encontrada");
+                throw new ErroNaoEncontrado($"ONG com ID {model.OngId} não foi encontrada");
 
             var solicitacaoExistente = await _solicitacaoRepository.ExistePendente(usuarioId, model.OngId);
             if (solicitacaoExistente)
-                throw new Exception("Já existe uma solicitação pendente para esta ONG");
+                throw new ErroNegocio("Já existe uma solicitação pendente para esta ONG");
 
             var solicitacao = new SolicitacaoVoluntariado
             {
@@ -86,7 +87,7 @@ namespace Voluta.Services
         {
             var solicitacao = await _solicitacaoRepository.GetByIdAsync(id);
             if (solicitacao == null)
-                return null;
+                throw new ErroNaoEncontrado($"Solicitação com ID {id} não foi encontrada");
 
             return SolicitacaoVoluntariadoViewModel.FromSolicitacao(solicitacao);
         }

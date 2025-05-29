@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Voluta.Models;
 using Voluta.Repositories;
 using Voluta.ViewModels;
+using Voluta.Exceptions;
 
 namespace Voluta.Services
 {
@@ -28,7 +29,7 @@ namespace Voluta.Services
         {
             var ong = await _ongRepository.GetByIdAsync(ongId);
             if (ong == null)
-                throw new Exception("ONG não encontrada");
+                throw new ErroNaoEncontrado($"ONG com ID {ongId} não foi encontrada");
 
             var skip = (pagina - 1) * tamanhoPagina;
             var solicitacoes = await _solicitacaoRepository.GetByOngAsync(ongId, status, skip, tamanhoPagina);
@@ -49,10 +50,10 @@ namespace Voluta.Services
         {
             var solicitacao = await _solicitacaoRepository.GetByIdAsync(id);
             if (solicitacao == null)
-                throw new Exception("Solicitação não encontrada");
+                throw new ErroNaoEncontrado($"Solicitação com ID {id} não foi encontrada");
 
             if (solicitacao.Status != StatusSolicitacao.Pendente)
-                throw new Exception("Apenas solicitações pendentes podem ser aprovadas");
+                throw new ErroNegocio("Apenas solicitações pendentes podem ser aprovadas");
 
             solicitacao.Status = StatusSolicitacao.Aprovada;
             solicitacao.DataAprovacao = DateTime.Now;
@@ -64,10 +65,10 @@ namespace Voluta.Services
         {
             var solicitacao = await _solicitacaoRepository.GetByIdAsync(id);
             if (solicitacao == null)
-                throw new Exception("Solicitação não encontrada");
+                throw new ErroNaoEncontrado($"Solicitação com ID {id} não foi encontrada");
 
             if (solicitacao.Status != StatusSolicitacao.Pendente)
-                throw new Exception("Apenas solicitações pendentes podem ser rejeitadas");
+                throw new ErroNegocio("Apenas solicitações pendentes podem ser rejeitadas");
 
             solicitacao.Status = StatusSolicitacao.Rejeitada;
 
