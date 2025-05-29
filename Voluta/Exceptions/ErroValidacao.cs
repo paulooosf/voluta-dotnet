@@ -1,4 +1,5 @@
-using FluentValidation.Results;
+using System;
+using System.Collections.Generic;
 
 namespace Voluta.Exceptions
 {
@@ -11,14 +12,14 @@ namespace Voluta.Exceptions
             Erros = new List<string>();
         }
 
-        public ErroValidacao(IEnumerable<ValidationFailure> falhas) : this()
-        {
-            Erros = falhas.Select(f => f.ErrorMessage);
-        }
-
         public ErroValidacao(IEnumerable<string> erros) : this()
         {
             Erros = erros;
+        }
+
+        public ErroValidacao(string erro) : this()
+        {
+            Erros = new[] { erro };
         }
     }
 } 

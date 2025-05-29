@@ -1,5 +1,7 @@
+using System;
 using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 using Voluta.Exceptions;
 
 namespace Voluta.Middleware
@@ -32,16 +34,15 @@ namespace Voluta.Middleware
         {
             context.Response.ContentType = "application/json";
             
-            // Define o status code baseado no tipo de erro
             context.Response.StatusCode = erro switch
             {
                 ErroNaoEncontrado => StatusCodes.Status404NotFound,
                 ErroNegocio => StatusCodes.Status400BadRequest,
-                ErroValidacao validacaoEx => StatusCodes.Status400BadRequest,
+                ErroValidacao => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
 
-            var resposta = erro switch
+            object resposta = erro switch
             {
                 ErroValidacao validacaoEx => new
                 {
