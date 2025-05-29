@@ -34,6 +34,34 @@ namespace Voluta.Data
                 .WithMany(o => o.SolicitacoesVoluntariado)
                 .HasForeignKey(s => s.OngId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Ong>()
+                .HasIndex(o => o.Cnpj)
+                .IsUnique();
+
+            modelBuilder.Entity<Ong>()
+                .HasIndex(o => o.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Usuario>()
+                .Property(u => u.Email)
+                .HasMaxLength(256);
+
+            modelBuilder.Entity<Ong>()
+                .Property(o => o.Email)
+                .HasMaxLength(256);
+
+            modelBuilder.Entity<Usuario>()
+                .Property(u => u.Telefone)
+                .HasMaxLength(15);
+
+            modelBuilder.Entity<Ong>()
+                .Property(o => o.Telefone)
+                .HasMaxLength(15);
         }
     }
 } 
