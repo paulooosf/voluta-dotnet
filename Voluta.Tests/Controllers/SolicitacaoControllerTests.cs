@@ -41,6 +41,37 @@ namespace Voluta.Tests.Controllers
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result.Result);
             Assert.Equal(200, okResult.StatusCode);
+            Assert.Equal(paginatedResult, okResult.Value);
+        }
+
+        [Fact]
+        public async Task AprovarSolicitacao_ReturnsNoContentResult()
+        {
+            // Arrange
+            _solicitacaoServiceMock.Setup(x => x.AprovarSolicitacaoAsync(1))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.AprovarSolicitacao(1);
+
+            // Assert
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+            Assert.Equal(204, noContentResult.StatusCode);
+        }
+
+        [Fact]
+        public async Task RejeitarSolicitacao_ReturnsNoContentResult()
+        {
+            // Arrange
+            _solicitacaoServiceMock.Setup(x => x.RejeitarSolicitacaoAsync(1))
+                .Returns(Task.CompletedTask);
+
+            // Act
+            var result = await _controller.RejeitarSolicitacao(1);
+
+            // Assert
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+            Assert.Equal(204, noContentResult.StatusCode);
         }
     }
 } 

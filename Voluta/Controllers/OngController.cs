@@ -31,30 +31,18 @@ namespace Voluta.Controllers
         public async Task<ActionResult<OngViewModel>> GetOng(int id)
         {
             var ong = await _ongService.GetOngAsync(id);
-            if (ong == null)
-            {
-                return NotFound();
-            }
-
-            return ong;
+            return Ok(ong);
         }
 
-        // GET: api/Ong/VoluntariosDisponiveis/5
-        [HttpGet("VoluntariosDisponiveis/{ongId}")]
+        // GET: api/Ong/5/VoluntariosDisponiveis
+        [HttpGet("{id}/VoluntariosDisponiveis")]
         public async Task<ActionResult<PaginatedViewModel<UsuarioViewModel>>> GetVoluntariosDisponiveis(
-            int ongId,
+            int id,
             [FromQuery] int pagina = 1,
             [FromQuery] int tamanhoPagina = 10)
         {
-            try
-            {
-                var result = await _ongService.GetVoluntariosDisponiveisAsync(ongId, pagina, tamanhoPagina);
-                return Ok(result);
-            }
-            catch (System.Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var result = await _ongService.GetVoluntariosDisponiveisAsync(id, pagina, tamanhoPagina);
+            return Ok(result);
         }
     }
 } 

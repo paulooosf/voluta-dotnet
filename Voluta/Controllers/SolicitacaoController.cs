@@ -25,45 +25,24 @@ namespace Voluta.Controllers
             [FromQuery] int pagina = 1,
             [FromQuery] int tamanhoPagina = 10)
         {
-            try
-            {
-                var result = await _solicitacaoService.GetSolicitacoesOngAsync(ongId, status, pagina, tamanhoPagina);
-                return Ok(result);
-            }
-            catch (System.Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var result = await _solicitacaoService.GetSolicitacoesOngAsync(ongId, status, pagina, tamanhoPagina);
+            return Ok(result);
         }
 
         // PUT: api/Solicitacao/5/Aprovar
         [HttpPut("{id}/Aprovar")]
         public async Task<IActionResult> AprovarSolicitacao(int id)
         {
-            try
-            {
-                await _solicitacaoService.AprovarSolicitacaoAsync(id);
-                return NoContent();
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _solicitacaoService.AprovarSolicitacaoAsync(id);
+            return NoContent();
         }
 
         // PUT: api/Solicitacao/5/Rejeitar
         [HttpPut("{id}/Rejeitar")]
         public async Task<IActionResult> RejeitarSolicitacao(int id)
         {
-            try
-            {
-                await _solicitacaoService.RejeitarSolicitacaoAsync(id);
-                return NoContent();
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _solicitacaoService.RejeitarSolicitacaoAsync(id);
+            return NoContent();
         }
     }
 } 

@@ -31,12 +31,7 @@ namespace Voluta.Controllers
         public async Task<ActionResult<UsuarioViewModel>> GetUsuario(int id)
         {
             var usuario = await _usuarioService.GetUsuarioAsync(id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
-
-            return usuario;
+            return Ok(usuario);
         }
 
         // POST: api/Usuario/SolicitarVoluntariado
@@ -45,15 +40,8 @@ namespace Voluta.Controllers
             [FromBody] NovaSolicitacaoVoluntariadoViewModel model,
             [FromQuery] int usuarioId)
         {
-            try
-            {
-                var result = await _usuarioService.SolicitarVoluntariadoAsync(usuarioId, model);
-                return CreatedAtAction(nameof(GetSolicitacao), new { id = result.Id }, result);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _usuarioService.SolicitarVoluntariadoAsync(usuarioId, model);
+            return CreatedAtAction(nameof(GetSolicitacao), new { id = result.Id }, result);
         }
 
         // GET: api/Usuario/Solicitacao/5
@@ -61,12 +49,7 @@ namespace Voluta.Controllers
         public async Task<ActionResult<SolicitacaoVoluntariadoViewModel>> GetSolicitacao(int id)
         {
             var solicitacao = await _usuarioService.GetSolicitacaoAsync(id);
-            if (solicitacao == null)
-            {
-                return NotFound();
-            }
-
-            return solicitacao;
+            return Ok(solicitacao);
         }
     }
 } 
