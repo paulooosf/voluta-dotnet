@@ -48,6 +48,18 @@ namespace Voluta.Data
                 .IsUnique();
 
             modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Nome);
+
+            modelBuilder.Entity<Ong>()
+                .HasIndex(o => o.Nome);
+
+            modelBuilder.Entity<Usuario>()
+                .HasIndex(u => u.Disponivel);
+
+            modelBuilder.Entity<SolicitacaoVoluntariado>()
+                .HasIndex(s => new { s.Status, s.DataSolicitacao });
+
+            modelBuilder.Entity<Usuario>()
                 .Property(u => u.Email)
                 .HasMaxLength(256);
 

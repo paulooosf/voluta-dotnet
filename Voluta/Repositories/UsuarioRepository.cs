@@ -20,6 +20,7 @@ namespace Voluta.Repositories
         {
             return await _context.Usuarios
                 .AsNoTracking()
+                .OrderBy(u => u.Nome)
                 .Skip(skip)
                 .Take(take)
                 .ToListAsync();
@@ -27,7 +28,10 @@ namespace Voluta.Repositories
 
         public async Task<Usuario> GetByIdAsync(int id)
         {
-            return await _context.Usuarios.FindAsync(id);
+            return await _context.Usuarios
+                .Include(u => u.SolicitacoesVoluntariado
+                    .Where(s => s.Status == StatusSolicitacao.Pendente))
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<int> GetTotalCountAsync()
@@ -44,23 +48,31 @@ namespace Voluta.Repositories
 
         public async Task UpdateAsync(Usuario usuario)
         {
-            _context.Entry(usuario).State = EntityState.Modified;
+            var entry = _context.Entry(usuario);
+            if (entry.State == EntityState.Detached)
+            {
+                var existingUsuario = await _context.Usuarios.FindAsync(usuario.Id);
+                if (existingUsuario != null)
+                {
+                    _context.Entry(existingUsuario).CurrentValues.SetValues(usuario);
+                }
+            }
+            
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario != null)
-            {
-                _context.Usuarios.Remove(usuario);
-                await _context.SaveChangesAsync();
-            }
+            await _context.Usuarios
+                .Where(u => u.Id == id)
+                .ExecuteDeleteAsync();
         }
 
         public async Task<bool> ExistsAsync(int id)
         {
-            return await _context.Usuarios.AnyAsync(u => u.Id == id);
+            return await _context.Usuarios
+                .AsNoTracking()
+                .AnyAsync(u => u.Id == id);
         }
 
         public async Task<IEnumerable<Usuario>> GetDisponiveisByAreasAsync(IEnumerable<AreaAtuacao> areas, int skip, int take)
@@ -77,6 +89,7 @@ namespace Voluta.Repositories
             }
 
             return await query
+                .OrderBy(u => u.Nome)
                 .Skip(skip)
                 .Take(take)
                 .ToListAsync();
@@ -85,6 +98,7 @@ namespace Voluta.Repositories
         public async Task<int> GetDisponiveisByAreasCountAsync(IEnumerable<AreaAtuacao> areas)
         {
             var query = _context.Usuarios
+                .AsNoTracking()
                 .Where(u => u.Disponivel);
 
             if (areas?.Any() == true)
