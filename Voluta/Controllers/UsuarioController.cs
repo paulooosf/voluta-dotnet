@@ -37,6 +37,31 @@ namespace Voluta.Controllers
             return Ok(usuario);
         }
 
+        // POST: api/Usuario
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult<UsuarioViewModel>> CreateUsuario([FromBody] NovoUsuarioViewModel model)
+        {
+            var usuario = await _usuarioService.CreateUsuarioAsync(model);
+            return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
+        }
+
+        // PUT: api/Usuario/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUsuario(int id, [FromBody] AtualizarUsuarioViewModel model)
+        {
+            await _usuarioService.UpdateUsuarioAsync(id, model);
+            return NoContent();
+        }
+
+        // DELETE: api/Usuario/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUsuario(int id)
+        {
+            await _usuarioService.DeleteUsuarioAsync(id);
+            return NoContent();
+        }
+
         // POST: api/Usuario/SolicitarVoluntariado
         [HttpPost("SolicitarVoluntariado")]
         public async Task<ActionResult<SolicitacaoVoluntariadoViewModel>> SolicitarVoluntariado(

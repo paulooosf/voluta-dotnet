@@ -6,6 +6,7 @@ using Voluta.Models;
 using Voluta.Repositories;
 using Voluta.ViewModels;
 using Voluta.Exceptions;
+using BC = BCrypt.Net.BCrypt;
 
 namespace Voluta.Services
 {
@@ -49,6 +50,54 @@ namespace Voluta.Services
                 throw new ErroNaoEncontrado($"Usuário com ID {id} não foi encontrado");
 
             return UsuarioViewModel.FromUsuario(usuario);
+        }
+
+        public async Task<UsuarioViewModel> CreateUsuarioAsync(NovoUsuarioViewModel model)
+        {
+            var usuarioExistente = await _usuarioRepository.GetByEmailAsync(model.Email);
+            if (usuarioExistente != null)
+                throw new ErroNegocio("Já existe um usuário cadastrado com este e-mail");
+
+            var usuario = new Usuario
+            {
+                Nome = model.Nome,
+                Email = model.Email,
+                Telefone = model.Telefone,
+                Disponivel = model.Disponivel,
+                AreasInteresse = model.AreasInteresse.Select(a => Enum.Parse<AreaAtuacao>(a)).ToArray(),
+                SenhaHash = BC.HashPassword(model.Senha),
+                DataCadastro = DateTime.Now
+            };
+
+            usuario = await _usuarioRepository.AddAsync(usuario);
+            return UsuarioViewModel.FromUsuario(usuario);
+        }
+
+        public async Task<UsuarioViewModel> UpdateUsuarioAsync(int id, AtualizarUsuarioViewModel model)
+        {
+            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            if (usuario == null)
+                throw new ErroNaoEncontrado($"Usuário com ID {id} não foi encontrado");
+
+            usuario.Nome = model.Nome;
+            usuario.Telefone = model.Telefone;
+            usuario.Disponivel = model.Disponivel;
+            usuario.AreasInteresse = model.AreasInteresse.Select(a => Enum.Parse<AreaAtuacao>(a)).ToArray();
+
+            await _usuarioRepository.UpdateAsync(usuario);
+            return UsuarioViewModel.FromUsuario(usuario);
+        }
+
+        public async Task DeleteUsuarioAsync(int id)
+        {
+            var usuario = await _usuarioRepository.GetByIdAsync(id);
+            if (usuario == null)
+                throw new ErroNaoEncontrado($"Usuário com ID {id} não foi encontrado");
+
+            if (usuario.SolicitacoesVoluntariado.Any(s => s.Status == StatusSolicitacao.Pendente))
+                throw new ErroNegocio("Não é possível excluir um usuário com solicitações pendentes");
+
+            await _usuarioRepository.DeleteAsync(id);
         }
 
         public async Task<SolicitacaoVoluntariadoViewModel> SolicitarVoluntariadoAsync(

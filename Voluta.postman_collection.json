@@ -79,6 +79,75 @@
 					"response": []
 				},
 				{
+					"name": "Criar Usuário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Novo Usuário\",\n    \"email\": \"novo@exemplo.com\",\n    \"senha\": \"Senha@123\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"disponivel\": true,\n    \"areasInteresse\": [\"Educação\", \"Meio Ambiente\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Usuario",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Usuario"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Usuário",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Usuário Atualizado\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"disponivel\": true,\n    \"areasInteresse\": [\"Educação\", \"Meio Ambiente\", \"Saúde\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Usuario/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Usuario", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Usuário",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Usuario/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Usuario", "1"]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Solicitar Voluntariado",
 					"request": {
 						"method": "POST",
@@ -113,15 +182,23 @@
 					"response": []
 				},
 				{
-					"name": "Obter Solicitação por ID",
+					"name": "Obter Solicitação",
 					"request": {
 						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/api/Usuario/Solicitacao/1",
 							"host": ["{{baseUrl}}"],
 							"path": ["api", "Usuario", "Solicitacao", "1"]
 						}
-					}
+					},
+					"response": []
 				}
 			]
 		},
@@ -165,6 +242,75 @@
 					"response": []
 				},
 				{
+					"name": "Criar ONG",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Nova ONG\",\n    \"cnpj\": \"12345678901234\",\n    \"email\": \"ong@exemplo.com\",\n    \"senha\": \"Senha@123\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"descricao\": \"ONG dedicada a ajudar pessoas em situação de vulnerabilidade\",\n    \"areasAtuacao\": [\"Assistência Social\", \"Educação\"],\n    \"endereco\": \"Rua Exemplo, 123 - São Paulo/SP\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Ong",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Ong"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar ONG",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"ONG Atualizada\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"descricao\": \"ONG atualizada com nova descrição\",\n    \"areasAtuacao\": [\"Assistência Social\", \"Educação\", \"Saúde\"],\n    \"endereco\": \"Rua Nova, 456 - São Paulo/SP\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Ong/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Ong", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir ONG",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Ong/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Ong", "1"]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Listar Voluntários Disponíveis",
 					"request": {
 						"method": "GET",
@@ -199,6 +345,58 @@
 			"name": "Solicitações",
 			"item": [
 				{
+					"name": "Listar Todas Solicitações",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Solicitacao?status=0&pagina=1&tamanhoPagina=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Solicitacao"],
+							"query": [
+								{
+									"key": "status",
+									"value": "0"
+								},
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "tamanhoPagina",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Solicitação por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Solicitacao/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Solicitacao", "1"]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Listar Solicitações da ONG",
 					"request": {
 						"method": "GET",
@@ -213,6 +411,39 @@
 							"raw": "{{baseUrl}}/api/Solicitacao/Ong/1?status=0&pagina=1&tamanhoPagina=10",
 							"host": ["{{baseUrl}}"],
 							"path": ["api", "Solicitacao", "Ong", "1"],
+							"query": [
+								{
+									"key": "status",
+									"value": "0"
+								},
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "tamanhoPagina",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Solicitações do Usuário",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Solicitacao/Usuario/1?status=0&pagina=1&tamanhoPagina=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Solicitacao", "Usuario", "1"],
 							"query": [
 								{
 									"key": "status",
@@ -268,6 +499,25 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Excluir Solicitação",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Solicitacao/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Solicitacao", "1"]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -277,18 +527,14 @@
 			"listen": "prerequest",
 			"script": {
 				"type": "text/javascript",
-				"exec": [
-					""
-				]
+				"exec": [""]
 			}
 		},
 		{
 			"listen": "test",
 			"script": {
 				"type": "text/javascript",
-				"exec": [
-					""
-				]
+				"exec": [""]
 			}
 		}
 	],
