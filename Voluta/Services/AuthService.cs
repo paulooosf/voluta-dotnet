@@ -58,6 +58,7 @@ namespace Voluta.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
+                NotBefore = DateTime.UtcNow,
                 Expires = DateTime.UtcNow.AddMinutes(_jwtConfig.ExpiracaoMinutos),
                 Issuer = _jwtConfig.Issuer,
                 Audience = _jwtConfig.Audience,
