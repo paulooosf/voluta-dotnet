@@ -12,13 +12,45 @@ namespace Voluta.Services
     {
         private readonly ISolicitacaoVoluntariadoRepository _solicitacaoRepository;
         private readonly IOngRepository _ongRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
         public SolicitacaoService(
             ISolicitacaoVoluntariadoRepository solicitacaoRepository,
-            IOngRepository ongRepository)
+            IOngRepository ongRepository,
+            IUsuarioRepository usuarioRepository)
         {
             _solicitacaoRepository = solicitacaoRepository;
             _ongRepository = ongRepository;
+            _usuarioRepository = usuarioRepository;
+        }
+
+        public async Task<PaginatedViewModel<SolicitacaoVoluntariadoViewModel>> GetSolicitacoesAsync(
+            StatusSolicitacao? status,
+            int pagina,
+            int tamanhoPagina)
+        {
+            var skip = (pagina - 1) * tamanhoPagina;
+            var solicitacoes = await _solicitacaoRepository.GetAllAsync(status, skip, tamanhoPagina);
+            var total = await _solicitacaoRepository.GetTotalCountAsync(status);
+            var totalPaginas = (int)Math.Ceiling(total / (double)tamanhoPagina);
+
+            return new PaginatedViewModel<SolicitacaoVoluntariadoViewModel>
+            {
+                Items = solicitacoes.Select(s => SolicitacaoVoluntariadoViewModel.FromSolicitacao(s)),
+                PageNumber = pagina,
+                PageSize = tamanhoPagina,
+                TotalPages = totalPaginas,
+                TotalItems = total
+            };
+        }
+
+        public async Task<SolicitacaoVoluntariadoViewModel> GetSolicitacaoAsync(int id)
+        {
+            var solicitacao = await _solicitacaoRepository.GetByIdAsync(id);
+            if (solicitacao == null)
+                throw new ErroNaoEncontrado($"Solicitação com ID {id} não foi encontrada");
+
+            return SolicitacaoVoluntariadoViewModel.FromSolicitacao(solicitacao);
         }
 
         public async Task<PaginatedViewModel<SolicitacaoVoluntariadoViewModel>> GetSolicitacoesOngAsync(
@@ -71,8 +103,44 @@ namespace Voluta.Services
                 throw new ErroNegocio("Apenas solicitações pendentes podem ser rejeitadas");
 
             solicitacao.Status = StatusSolicitacao.Rejeitada;
-
             await _solicitacaoRepository.UpdateAsync(solicitacao);
+        }
+
+        public async Task DeleteSolicitacaoAsync(int id)
+        {
+            var solicitacao = await _solicitacaoRepository.GetByIdAsync(id);
+            if (solicitacao == null)
+                throw new ErroNaoEncontrado($"Solicitação com ID {id} não foi encontrada");
+
+            if (solicitacao.Status == StatusSolicitacao.Aprovada)
+                throw new ErroNegocio("Não é possível excluir uma solicitação aprovada");
+
+            await _solicitacaoRepository.DeleteAsync(id);
+        }
+
+        public async Task<PaginatedViewModel<SolicitacaoVoluntariadoViewModel>> GetSolicitacoesUsuarioAsync(
+            int usuarioId,
+            StatusSolicitacao? status,
+            int pagina,
+            int tamanhoPagina)
+        {
+            var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
+            if (usuario == null)
+                throw new ErroNaoEncontrado($"Usuário com ID {usuarioId} não foi encontrado");
+
+            var skip = (pagina - 1) * tamanhoPagina;
+            var solicitacoes = await _solicitacaoRepository.GetByUsuarioAsync(usuarioId, status, skip, tamanhoPagina);
+            var total = await _solicitacaoRepository.GetTotalByUsuarioAsync(usuarioId, status);
+            var totalPaginas = (int)Math.Ceiling(total / (double)tamanhoPagina);
+
+            return new PaginatedViewModel<SolicitacaoVoluntariadoViewModel>
+            {
+                Items = solicitacoes.Select(s => SolicitacaoVoluntariadoViewModel.FromSolicitacao(s)),
+                PageNumber = pagina,
+                PageSize = tamanhoPagina,
+                TotalPages = totalPaginas,
+                TotalItems = total
+            };
         }
     }
 } 

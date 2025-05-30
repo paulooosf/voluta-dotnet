@@ -16,6 +16,38 @@ namespace Voluta.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<SolicitacaoVoluntariado>> GetAllAsync(StatusSolicitacao? status, int skip, int take)
+        {
+            var query = _context.SolicitacoesVoluntariado
+                .AsNoTracking()
+                .Include(s => s.Usuario)
+                .Include(s => s.Ong)
+                .AsQueryable();
+
+            if (status.HasValue)
+            {
+                query = query.Where(s => s.Status == status.Value);
+            }
+
+            return await query
+                .OrderByDescending(s => s.DataSolicitacao)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalCountAsync(StatusSolicitacao? status)
+        {
+            var query = _context.SolicitacoesVoluntariado.AsNoTracking();
+
+            if (status.HasValue)
+            {
+                query = query.Where(s => s.Status == status.Value);
+            }
+
+            return await query.CountAsync();
+        }
+
         public async Task<IEnumerable<SolicitacaoVoluntariado>> GetByOngAsync(int ongId, StatusSolicitacao? status, int skip, int take)
         {
             var query = _context.SolicitacoesVoluntariado
@@ -95,24 +127,84 @@ namespace Voluta.Repositories
                     _context.Entry(existingSolicitacao).CurrentValues.SetValues(solicitacao);
                 }
             }
-            
+
             await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var solicitacao = await _context.SolicitacoesVoluntariado.FindAsync(id);
+            if (solicitacao != null)
+            {
+                _context.SolicitacoesVoluntariado.Remove(solicitacao);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<bool> ExistsAsync(int id)
         {
-            return await _context.SolicitacoesVoluntariado
-                .AsNoTracking()
-                .AnyAsync(s => s.Id == id);
+            return await _context.SolicitacoesVoluntariado.AnyAsync(s => s.Id == id);
         }
 
         public async Task<bool> ExistePendente(int usuarioId, int ongId)
         {
             return await _context.SolicitacoesVoluntariado
-                .AsNoTracking()
                 .AnyAsync(s => s.UsuarioId == usuarioId && 
                               s.OngId == ongId && 
                               s.Status == StatusSolicitacao.Pendente);
+        }
+
+        public async Task<IEnumerable<SolicitacaoVoluntariado>> GetByUsuarioAsync(int usuarioId, StatusSolicitacao? status, int skip, int take)
+        {
+            var query = _context.SolicitacoesVoluntariado
+                .AsNoTracking()
+                .Where(s => s.UsuarioId == usuarioId);
+
+            if (status.HasValue)
+            {
+                query = query.Where(s => s.Status == status.Value);
+            }
+
+            return await query
+                .OrderByDescending(s => s.DataSolicitacao)
+                .Select(s => new SolicitacaoVoluntariado
+                {
+                    Id = s.Id,
+                    UsuarioId = s.UsuarioId,
+                    OngId = s.OngId,
+                    DataSolicitacao = s.DataSolicitacao,
+                    DataAprovacao = s.DataAprovacao,
+                    Status = s.Status,
+                    Mensagem = s.Mensagem,
+                    Usuario = new Usuario 
+                    { 
+                        Id = s.Usuario.Id,
+                        Nome = s.Usuario.Nome,
+                        Email = s.Usuario.Email
+                    },
+                    Ong = new Ong 
+                    { 
+                        Id = s.Ong.Id,
+                        Nome = s.Ong.Nome
+                    }
+                })
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalByUsuarioAsync(int usuarioId, StatusSolicitacao? status)
+        {
+            var query = _context.SolicitacoesVoluntariado
+                .AsNoTracking()
+                .Where(s => s.UsuarioId == usuarioId);
+
+            if (status.HasValue)
+            {
+                query = query.Where(s => s.Status == status.Value);
+            }
+
+            return await query.CountAsync();
         }
     }
 } 
