@@ -34,6 +34,20 @@ namespace Voluta.Repositories
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 
+        public async Task<Ong> GetByCnpjAsync(string cnpj)
+        {
+            return await _context.Ongs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(o => o.Cnpj == cnpj);
+        }
+
+        public async Task<Ong> GetByEmailAsync(string email)
+        {
+            return await _context.Ongs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(o => o.Email == email);
+        }
+
         public async Task<int> GetTotalCountAsync()
         {
             return await _context.Ongs.CountAsync();
