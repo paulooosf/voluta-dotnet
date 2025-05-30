@@ -9,8 +9,39 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using System.Reflection;
 using Voluta.Filters;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Voluta.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuração do JWT
+var jwtConfig = builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>();
+builder.Services.AddSingleton(jwtConfig);
+
+// Configuração da Autenticação
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.Secret)),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidIssuer = jwtConfig.Issuer,
+        ValidAudience = jwtConfig.Audience,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+});
 
 // Adiciona os controllers e configura o filtro de validação
 builder.Services.AddControllers(options =>
@@ -58,6 +89,7 @@ builder.Services.AddScoped<ISolicitacaoVoluntariadoRepository, SolicitacaoVolunt
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IOngService, OngService>();
 builder.Services.AddScoped<ISolicitacaoService, SolicitacaoService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddCors(options =>
 {
@@ -87,7 +119,6 @@ else
 app.UseMiddleware<MiddlewareDeErros>();
 app.UseResponseCompression();
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowAll");
 app.UseAuthentication();

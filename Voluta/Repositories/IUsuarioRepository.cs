@@ -8,6 +8,7 @@ namespace Voluta.Repositories
     {
         Task<IEnumerable<Usuario>> GetAllAsync(int skip, int take);
         Task<Usuario> GetByIdAsync(int id);
+        Task<Usuario> GetByEmailAsync(string email);
         Task<int> GetTotalCountAsync();
         Task<Usuario> AddAsync(Usuario usuario);
         Task UpdateAsync(Usuario usuario);

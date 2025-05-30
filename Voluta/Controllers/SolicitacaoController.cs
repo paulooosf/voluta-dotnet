@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Voluta.Models;
 using Voluta.Services;
@@ -8,6 +9,7 @@ namespace Voluta.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class SolicitacaoController : ControllerBase
     {
         private readonly ISolicitacaoService _solicitacaoService;

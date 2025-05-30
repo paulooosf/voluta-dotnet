@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Voluta.Services;
 using Voluta.ViewModels;
@@ -7,6 +8,7 @@ namespace Voluta.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
@@ -18,6 +20,7 @@ namespace Voluta.Controllers
 
         // GET: api/Usuario
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<PaginatedViewModel<UsuarioViewModel>>> GetUsuarios(
             [FromQuery] int pagina = 1,
             [FromQuery] int tamanhoPagina = 10)

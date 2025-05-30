@@ -110,5 +110,12 @@ namespace Voluta.Repositories
 
             return await query.CountAsync();
         }
+
+        public async Task<Usuario> GetByEmailAsync(string email)
+        {
+            return await _context.Usuarios
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.Email == email);
+        }
     }
 } 

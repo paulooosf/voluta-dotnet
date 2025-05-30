@@ -1,0 +1,307 @@
+{
+	"info": {
+		"_postman_id": "your-collection-id",
+		"name": "Voluta",
+		"description": "API para conectar voluntários com ONGs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"usuario@exemplo.com\",\n    \"senha\": \"Senha@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Auth", "login"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuários",
+			"item": [
+				{
+					"name": "Listar Usuários",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Usuario?pagina=1&tamanhoPagina=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Usuario"],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "tamanhoPagina",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Usuário por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Usuario/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Usuario", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Solicitar Voluntariado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ongId\": 1,\n    \"mensagem\": \"Gostaria de me voluntariar para ajudar nas atividades.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Usuario/SolicitarVoluntariado?usuarioId=1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Usuario", "SolicitarVoluntariado"],
+							"query": [
+								{
+									"key": "usuarioId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter Solicitação por ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/Usuario/Solicitacao/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Usuario", "Solicitacao", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "ONGs",
+			"item": [
+				{
+					"name": "Listar ONGs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Ong?pagina=1&tamanhoPagina=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Ong"],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "tamanhoPagina",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obter ONG por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/Ong/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Ong", "1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Voluntários Disponíveis",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Ong/1/VoluntariosDisponiveis?pagina=1&tamanhoPagina=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Ong", "1", "VoluntariosDisponiveis"],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "tamanhoPagina",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Solicitações",
+			"item": [
+				{
+					"name": "Listar Solicitações da ONG",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Solicitacao/Ong/1?status=0&pagina=1&tamanhoPagina=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Solicitacao", "Ong", "1"],
+							"query": [
+								{
+									"key": "status",
+									"value": "0"
+								},
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "tamanhoPagina",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Aprovar Solicitação",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Solicitacao/1/Aprovar",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Solicitacao", "1", "Aprovar"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rejeitar Solicitação",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Solicitacao/1/Rejeitar",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Solicitacao", "1", "Rejeitar"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:7214",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+} 

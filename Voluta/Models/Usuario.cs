@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
 
 namespace Voluta.Models
 {
@@ -28,16 +29,16 @@ namespace Voluta.Models
         public DateTime DataCadastro { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "As áreas de interesse são obrigatórias")]
-        public string AreasInteresseJson { get; set; }
+        public string AreasInteresseJson
+        {
+            get => AreasInteresse != null ? JsonSerializer.Serialize(AreasInteresse) : null;
+            set => AreasInteresse = !string.IsNullOrEmpty(value) ? JsonSerializer.Deserialize<AreaAtuacao[]>(value) : null;
+        }
 
         [NotMapped]
-        public AreaAtuacao[] AreasInteresse
-        {
-            get => string.IsNullOrEmpty(AreasInteresseJson) 
-                ? Array.Empty<AreaAtuacao>() 
-                : System.Text.Json.JsonSerializer.Deserialize<AreaAtuacao[]>(AreasInteresseJson);
-            set => AreasInteresseJson = System.Text.Json.JsonSerializer.Serialize(value);
-        }
+        public AreaAtuacao[] AreasInteresse { get; set; }
+
+        public string SenhaHash { get; set; }
 
         public virtual ICollection<Ong> OngsVoluntario { get; set; }
         public virtual ICollection<SolicitacaoVoluntariado> SolicitacoesVoluntariado { get; set; }
