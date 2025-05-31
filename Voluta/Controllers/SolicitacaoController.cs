@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Voluta.Models;
 using Voluta.Services;
 using Voluta.ViewModels;
+using Voluta.Models.Auth;
 
 namespace Voluta.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = nameof(Roles.Representante))]
     public class SolicitacaoController : ControllerBase
     {
         private readonly ISolicitacaoService _solicitacaoService;

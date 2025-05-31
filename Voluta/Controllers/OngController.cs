@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Voluta.Models;
+using Voluta.Models.Auth;
 using Voluta.Services;
 using Voluta.ViewModels;
 
@@ -40,7 +43,7 @@ namespace Voluta.Controllers
 
         // POST: api/Ong
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = nameof(Roles.Admin))]
         public async Task<ActionResult<OngViewModel>> CreateOng([FromBody] NovaOngViewModel model)
         {
             var ong = await _ongService.CreateOngAsync(model);
@@ -49,6 +52,7 @@ namespace Voluta.Controllers
 
         // PUT: api/Ong/5
         [HttpPut("{id}")]
+        [Authorize(Roles = nameof(Roles.Admin))]
         public async Task<IActionResult> UpdateOng(int id, [FromBody] AtualizarOngViewModel model)
         {
             await _ongService.UpdateOngAsync(id, model);
@@ -57,6 +61,7 @@ namespace Voluta.Controllers
 
         // DELETE: api/Ong/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = nameof(Roles.Admin))]
         public async Task<IActionResult> DeleteOng(int id)
         {
             await _ongService.DeleteOngAsync(id);
@@ -65,6 +70,7 @@ namespace Voluta.Controllers
 
         // GET: api/Ong/5/VoluntariosDisponiveis
         [HttpGet("{id}/VoluntariosDisponiveis")]
+        [Authorize(Roles = nameof(Roles.Representante))]
         public async Task<ActionResult<PaginatedViewModel<UsuarioViewModel>>> GetVoluntariosDisponiveis(
             int id,
             [FromQuery] int pagina = 1,
@@ -72,6 +78,14 @@ namespace Voluta.Controllers
         {
             var result = await _ongService.GetVoluntariosDisponiveisAsync(id, pagina, tamanhoPagina);
             return Ok(result);
+        }
+
+        [HttpGet("{id}/voluntarios")]
+        [Authorize(Roles = nameof(Roles.Representante))]
+        public async Task<ActionResult<IEnumerable<UsuarioViewModel>>> GetVoluntarios(int id)
+        {
+            var voluntarios = await _ongService.GetVoluntariosAsync(id);
+            return Ok(voluntarios);
         }
     }
 } 

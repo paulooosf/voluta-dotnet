@@ -117,5 +117,14 @@ namespace Voluta.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<IEnumerable<Usuario>> GetVoluntariosByOngAsync(int ongId)
+        {
+            return await _context.Ongs
+                .Include(o => o.Voluntarios)
+                .Where(o => o.Id == ongId)
+                .SelectMany(o => o.Voluntarios)
+                .ToListAsync();
+        }
     }
 } 

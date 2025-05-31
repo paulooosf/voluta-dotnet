@@ -15,7 +15,7 @@ namespace Voluta.Services
     public interface IAuthService
     {
         Task<string> LoginAsync(LoginRequest request);
-        string GerarToken(Usuario usuario);
+        string GerarToken(Usuario usuario, Roles role);
         string HashSenha(string senha);
         bool VerificarSenha(string senha, string hash);
     }
@@ -39,10 +39,17 @@ namespace Voluta.Services
                 throw new Exception("Email ou senha inválidos");
             }
 
-            return GerarToken(usuario);
+            // Por padrão, todos são usuários comuns
+            var role = Roles.Usuario;
+
+            // TODO: Implementar lógica para determinar a role do usuário
+            // Exemplo: Se o usuário estiver vinculado a uma ONG, será Representante
+            // Se o usuário tiver flag de admin, será Admin
+
+            return GerarToken(usuario, role);
         }
 
-        public string GerarToken(Usuario usuario)
+        public string GerarToken(Usuario usuario, Roles role)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
@@ -52,7 +59,7 @@ namespace Voluta.Services
                 new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
                 new Claim(ClaimTypes.Email, usuario.Email),
                 new Claim(ClaimTypes.Name, usuario.Nome),
-                new Claim(ClaimTypes.Role, "Usuario") // Você pode adicionar roles específicas aqui
+                new Claim(ClaimTypes.Role, role.ToString())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

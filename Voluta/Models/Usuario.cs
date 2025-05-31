@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
+using Voluta.Models.Auth;
 
 namespace Voluta.Models
 {
@@ -39,6 +40,9 @@ namespace Voluta.Models
         public AreaAtuacao[] AreasInteresse { get; set; }
 
         public string SenhaHash { get; set; }
+
+        [Required]
+        public Roles Role { get; set; } = Roles.Usuario;
 
         public virtual ICollection<Ong> OngsVoluntario { get; set; }
         public virtual ICollection<SolicitacaoVoluntariado> SolicitacoesVoluntariado { get; set; }

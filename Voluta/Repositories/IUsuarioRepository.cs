@@ -16,5 +16,6 @@ namespace Voluta.Repositories
         Task<bool> ExistsAsync(int id);
         Task<IEnumerable<Usuario>> GetDisponiveisByAreasAsync(IEnumerable<AreaAtuacao> areas, int skip, int take);
         Task<int> GetDisponiveisByAreasCountAsync(IEnumerable<AreaAtuacao> areas);
+        Task<IEnumerable<Usuario>> GetVoluntariosByOngAsync(int ongId);
     }
 } 

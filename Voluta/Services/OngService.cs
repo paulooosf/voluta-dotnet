@@ -125,5 +125,15 @@ namespace Voluta.Services
                 TotalItems = total
             };
         }
+
+        public async Task<IEnumerable<UsuarioViewModel>> GetVoluntariosAsync(int id)
+        {
+            var ong = await _ongRepository.GetByIdAsync(id);
+            if (ong == null)
+                throw new ErroNaoEncontrado($"ONG com ID {id} não foi encontrada");
+
+            var voluntarios = await _usuarioRepository.GetVoluntariosByOngAsync(id);
+            return voluntarios.Select(u => UsuarioViewModel.FromUsuario(u));
+        }
     }
 } 
