@@ -20,7 +20,6 @@ namespace Voluta.Controllers
             _solicitacaoService = solicitacaoService;
         }
 
-        // GET: api/Solicitacao
         [HttpGet]
         public async Task<ActionResult<PaginatedViewModel<SolicitacaoVoluntariadoViewModel>>> GetSolicitacoes(
             [FromQuery] StatusSolicitacao? status = null,
@@ -31,7 +30,6 @@ namespace Voluta.Controllers
             return Ok(result);
         }
 
-        // GET: api/Solicitacao/5
         [HttpGet("{id}")]
         public async Task<ActionResult<SolicitacaoVoluntariadoViewModel>> GetSolicitacao(int id)
         {
@@ -39,7 +37,6 @@ namespace Voluta.Controllers
             return Ok(solicitacao);
         }
 
-        // GET: api/Solicitacao/Ong/5
         [HttpGet("Ong/{ongId}")]
         public async Task<ActionResult<PaginatedViewModel<SolicitacaoVoluntariadoViewModel>>> GetSolicitacoesOng(
             int ongId,
@@ -51,7 +48,6 @@ namespace Voluta.Controllers
             return Ok(result);
         }
 
-        // GET: api/Solicitacao/Usuario/5
         [HttpGet("Usuario/{usuarioId}")]
         public async Task<ActionResult<PaginatedViewModel<SolicitacaoVoluntariadoViewModel>>> GetSolicitacoesUsuario(
             int usuarioId,
@@ -63,7 +59,6 @@ namespace Voluta.Controllers
             return Ok(result);
         }
 
-        // PUT: api/Solicitacao/5/Aprovar
         [HttpPut("{id}/Aprovar")]
         public async Task<IActionResult> AprovarSolicitacao(int id)
         {
@@ -71,7 +66,6 @@ namespace Voluta.Controllers
             return NoContent();
         }
 
-        // PUT: api/Solicitacao/5/Rejeitar
         [HttpPut("{id}/Rejeitar")]
         public async Task<IActionResult> RejeitarSolicitacao(int id)
         {
@@ -79,7 +73,6 @@ namespace Voluta.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Solicitacao/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSolicitacao(int id)
         {

@@ -19,7 +19,6 @@ namespace Voluta.Controllers
             _usuarioService = usuarioService;
         }
 
-        // GET: api/Usuario
         [HttpGet]
         [Authorize(Roles = nameof(Roles.Admin))]
         public async Task<ActionResult<PaginatedViewModel<UsuarioViewModel>>> GetUsuarios(
@@ -30,7 +29,6 @@ namespace Voluta.Controllers
             return Ok(result);
         }
 
-        // GET: api/Usuario/5
         [HttpGet("{id}")]
         [Authorize(Roles = nameof(Roles.Admin))]
         public async Task<ActionResult<UsuarioViewModel>> GetUsuario(int id)
@@ -41,7 +39,6 @@ namespace Voluta.Controllers
             return Ok(usuario);
         }
 
-        // POST: api/Usuario
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult<UsuarioViewModel>> CreateUsuario([FromBody] NovoUsuarioViewModel model)
@@ -50,7 +47,6 @@ namespace Voluta.Controllers
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
         }
 
-        // PUT: api/Usuario/5
         [HttpPut("{id}")]
         [Authorize(Roles = nameof(Roles.Usuario))]
         public async Task<IActionResult> UpdateUsuario(int id, [FromBody] AtualizarUsuarioViewModel model)
@@ -59,7 +55,6 @@ namespace Voluta.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Usuario/5
         [HttpDelete("{id}")]
         [Authorize(Roles = nameof(Roles.Usuario))]
         public async Task<IActionResult> DeleteUsuario(int id)
@@ -68,7 +63,6 @@ namespace Voluta.Controllers
             return NoContent();
         }
 
-        // POST: api/Usuario/SolicitarVoluntariado
         [HttpPost("SolicitarVoluntariado")]
         [Authorize(Roles = nameof(Roles.Usuario))]
         public async Task<ActionResult<SolicitacaoVoluntariadoViewModel>> SolicitarVoluntariado(
@@ -79,7 +73,6 @@ namespace Voluta.Controllers
             return CreatedAtAction(nameof(GetSolicitacao), new { id = result.Id }, result);
         }
 
-        // GET: api/Usuario/Solicitacao/5
         [HttpGet("Solicitacao/{id}")]
         [Authorize(Roles = nameof(Roles.Usuario))]
         public async Task<ActionResult<SolicitacaoVoluntariadoViewModel>> GetSolicitacao(int id)

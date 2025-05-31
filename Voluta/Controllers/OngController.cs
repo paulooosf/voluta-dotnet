@@ -21,7 +21,6 @@ namespace Voluta.Controllers
             _ongService = ongService;
         }
 
-        // GET: api/Ong
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<PaginatedViewModel<OngViewModel>>> GetOngs(
@@ -32,7 +31,6 @@ namespace Voluta.Controllers
             return Ok(result);
         }
 
-        // GET: api/Ong/5
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<OngViewModel>> GetOng(int id)
@@ -41,7 +39,6 @@ namespace Voluta.Controllers
             return Ok(ong);
         }
 
-        // POST: api/Ong
         [HttpPost]
         [Authorize(Roles = nameof(Roles.Admin))]
         public async Task<ActionResult<OngViewModel>> CreateOng([FromBody] NovaOngViewModel model)
@@ -50,7 +47,6 @@ namespace Voluta.Controllers
             return CreatedAtAction(nameof(GetOng), new { id = ong.Id }, ong);
         }
 
-        // PUT: api/Ong/5
         [HttpPut("{id}")]
         [Authorize(Roles = nameof(Roles.Admin))]
         public async Task<IActionResult> UpdateOng(int id, [FromBody] AtualizarOngViewModel model)
@@ -59,7 +55,6 @@ namespace Voluta.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Ong/5
         [HttpDelete("{id}")]
         [Authorize(Roles = nameof(Roles.Admin))]
         public async Task<IActionResult> DeleteOng(int id)
@@ -68,7 +63,6 @@ namespace Voluta.Controllers
             return NoContent();
         }
 
-        // GET: api/Ong/5/VoluntariosDisponiveis
         [HttpGet("{id}/VoluntariosDisponiveis")]
         [Authorize(Roles = nameof(Roles.Representante))]
         public async Task<ActionResult<PaginatedViewModel<UsuarioViewModel>>> GetVoluntariosDisponiveis(

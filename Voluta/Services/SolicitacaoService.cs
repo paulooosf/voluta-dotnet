@@ -96,13 +96,11 @@ namespace Voluta.Services
             if (ong == null)
                 throw new ErroNaoEncontrado($"ONG com ID {solicitacao.OngId} não foi encontrada");
 
-            // Inicializa as coleções se necessário
             if (usuario.OngsVoluntario == null)
                 usuario.OngsVoluntario = new List<Ong>();
             if (ong.Voluntarios == null)
                 ong.Voluntarios = new List<Usuario>();
 
-            // Adiciona o relacionamento entre usuário e ONG
             usuario.OngsVoluntario.Add(ong);
             ong.Voluntarios.Add(usuario);
 
