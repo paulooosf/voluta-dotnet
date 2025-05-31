@@ -10,13 +10,35 @@
 			"name": "Auth",
 			"item": [
 				{
-					"name": "Login",
+					"name": "Login Admin",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"usuario@exemplo.com\",\n    \"senha\": \"Senha@123\"\n}",
+							"raw": "{\n    \"email\": \"admin@voluta.com\",\n    \"senha\": \"Admin@123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/Auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Representante",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"representante@ong.com\",\n    \"senha\": \"Representante@123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -37,10 +59,16 @@
 			"name": "Usuários",
 			"item": [
 				{
-					"name": "Listar Usuários",
+					"name": "Listar Usuários [Admin]",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{baseUrl}}/api/Usuario?pagina=1&tamanhoPagina=10",
 							"host": ["{{baseUrl}}"],
@@ -60,13 +88,13 @@
 					"response": []
 				},
 				{
-					"name": "Obter Usuário por ID",
+					"name": "Obter Usuário por ID [Admin]",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{adminToken}}",
 								"type": "text"
 							}
 						],
@@ -79,13 +107,13 @@
 					"response": []
 				},
 				{
-					"name": "Criar Usuário",
+					"name": "Criar Usuário [Anônimo]",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Novo Usuário\",\n    \"email\": \"novo@exemplo.com\",\n    \"senha\": \"Senha@123\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"disponivel\": true,\n    \"areasInteresse\": [\"Educação\", \"Meio Ambiente\"]\n}",
+							"raw": "{\n    \"nome\": \"Novo Usuário\",\n    \"email\": \"novo@exemplo.com\",\n    \"senha\": \"Senha@123\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"disponivel\": true,\n    \"areasInteresse\": [\"EducacaoEnsino\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -101,19 +129,19 @@
 					"response": []
 				},
 				{
-					"name": "Atualizar Usuário",
+					"name": "Atualizar Usuário [Usuario]",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{userToken}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Usuário Atualizado\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"disponivel\": true,\n    \"areasInteresse\": [\"Educação\", \"Meio Ambiente\", \"Saúde\"]\n}",
+							"raw": "{\n    \"nome\": \"Usuário Atualizado\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"disponivel\": true,\n    \"areasInteresse\": [\"EducacaoEnsino\", \"SaudeAtendimentoMedico\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -129,13 +157,13 @@
 					"response": []
 				},
 				{
-					"name": "Excluir Usuário",
+					"name": "Excluir Usuário [Usuario]",
 					"request": {
 						"method": "DELETE",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{userToken}}",
 								"type": "text"
 							}
 						],
@@ -148,13 +176,13 @@
 					"response": []
 				},
 				{
-					"name": "Solicitar Voluntariado",
+					"name": "Solicitar Voluntariado [Usuario]",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{userToken}}",
 								"type": "text"
 							}
 						],
@@ -182,13 +210,13 @@
 					"response": []
 				},
 				{
-					"name": "Obter Solicitação",
+					"name": "Obter Solicitação [Usuario]",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{userToken}}",
 								"type": "text"
 							}
 						],
@@ -206,7 +234,7 @@
 			"name": "ONGs",
 			"item": [
 				{
-					"name": "Listar ONGs",
+					"name": "Listar ONGs [Anônimo]",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -229,7 +257,7 @@
 					"response": []
 				},
 				{
-					"name": "Obter ONG por ID",
+					"name": "Obter ONG por ID [Anônimo]",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -242,13 +270,19 @@
 					"response": []
 				},
 				{
-					"name": "Criar ONG",
+					"name": "Criar ONG [Admin]",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"Nova ONG\",\n    \"cnpj\": \"12345678901234\",\n    \"email\": \"ong@exemplo.com\",\n    \"senha\": \"Senha@123\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"descricao\": \"ONG dedicada a ajudar pessoas em situação de vulnerabilidade\",\n    \"areasAtuacao\": [\"Assistência Social\", \"Educação\"],\n    \"endereco\": \"Rua Exemplo, 123 - São Paulo/SP\"\n}",
+							"raw": "{\n    \"nome\": \"Nova ONG\",\n    \"cnpj\": \"12345678901234\",\n    \"email\": \"ong@exemplo.com\",\n    \"senha\": \"Senha@123\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"descricao\": \"ONG dedicada a ajudar pessoas em situação de vulnerabilidade\",\n    \"areasAtuacao\": [\"AssistenciaSocial\", \"EducacaoEnsino\"],\n    \"endereco\": \"Rua Exemplo, 123 - São Paulo/SP\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -264,19 +298,19 @@
 					"response": []
 				},
 				{
-					"name": "Atualizar ONG",
+					"name": "Atualizar ONG [Admin]",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{adminToken}}",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"ONG Atualizada\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"descricao\": \"ONG atualizada com nova descrição\",\n    \"areasAtuacao\": [\"Assistência Social\", \"Educação\", \"Saúde\"],\n    \"endereco\": \"Rua Nova, 456 - São Paulo/SP\"\n}",
+							"raw": "{\n    \"nome\": \"ONG Atualizada\",\n    \"telefone\": \"(11) 98765-4321\",\n    \"descricao\": \"ONG atualizada com nova descrição\",\n    \"areasAtuacao\": [\"AssistenciaSocial\", \"EducacaoEnsino\", \"SaudeAtendimentoMedico\"],\n    \"endereco\": \"Rua Nova, 456 - São Paulo/SP\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -292,13 +326,13 @@
 					"response": []
 				},
 				{
-					"name": "Excluir ONG",
+					"name": "Excluir ONG [Admin]",
 					"request": {
 						"method": "DELETE",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{adminToken}}",
 								"type": "text"
 							}
 						],
@@ -311,13 +345,13 @@
 					"response": []
 				},
 				{
-					"name": "Listar Voluntários Disponíveis",
+					"name": "Listar Voluntários Disponíveis [Representante]",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{representanteToken}}",
 								"type": "text"
 							}
 						],
@@ -338,6 +372,25 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Listar Voluntários da ONG [Representante]",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{representanteToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/Ong/1/voluntarios",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "Ong", "1", "voluntarios"]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -345,13 +398,13 @@
 			"name": "Solicitações",
 			"item": [
 				{
-					"name": "Listar Todas Solicitações",
+					"name": "Listar Todas Solicitações [Representante]",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{representanteToken}}",
 								"type": "text"
 							}
 						],
@@ -378,13 +431,13 @@
 					"response": []
 				},
 				{
-					"name": "Obter Solicitação por ID",
+					"name": "Obter Solicitação por ID [Representante]",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{representanteToken}}",
 								"type": "text"
 							}
 						],
@@ -397,13 +450,13 @@
 					"response": []
 				},
 				{
-					"name": "Listar Solicitações da ONG",
+					"name": "Listar Solicitações da ONG [Representante]",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{representanteToken}}",
 								"type": "text"
 							}
 						],
@@ -430,13 +483,13 @@
 					"response": []
 				},
 				{
-					"name": "Listar Solicitações do Usuário",
+					"name": "Listar Solicitações do Usuário [Representante]",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{representanteToken}}",
 								"type": "text"
 							}
 						],
@@ -463,13 +516,13 @@
 					"response": []
 				},
 				{
-					"name": "Aprovar Solicitação",
+					"name": "Aprovar Solicitação [Representante]",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{representanteToken}}",
 								"type": "text"
 							}
 						],
@@ -482,13 +535,13 @@
 					"response": []
 				},
 				{
-					"name": "Rejeitar Solicitação",
+					"name": "Rejeitar Solicitação [Representante]",
 					"request": {
 						"method": "PUT",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer {{token}}",
+								"value": "Bearer {{representanteToken}}",
 								"type": "text"
 							}
 						],
@@ -496,25 +549,6 @@
 							"raw": "{{baseUrl}}/api/Solicitacao/1/Rejeitar",
 							"host": ["{{baseUrl}}"],
 							"path": ["api", "Solicitacao", "1", "Rejeitar"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Excluir Solicitação",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/api/Solicitacao/1",
-							"host": ["{{baseUrl}}"],
-							"path": ["api", "Solicitacao", "1"]
 						}
 					},
 					"response": []
@@ -527,26 +561,25 @@
 			"listen": "prerequest",
 			"script": {
 				"type": "text/javascript",
-				"exec": [""]
+				"exec": [
+					""
+				]
 			}
 		},
 		{
 			"listen": "test",
 			"script": {
 				"type": "text/javascript",
-				"exec": [""]
+				"exec": [
+					""
+				]
 			}
 		}
 	],
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "https://localhost:7214",
-			"type": "string"
-		},
-		{
-			"key": "token",
-			"value": "",
+			"value": "http://localhost:5000",
 			"type": "string"
 		}
 	]
