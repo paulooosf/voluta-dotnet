@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Voluta")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ed865182813000645415105e64a7a8fca569ee0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5751cc35869a7d7bde64054d9e6e83d1cc7737c5")]
 [assembly: System.Reflection.AssemblyProductAttribute("Voluta")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Voluta")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
