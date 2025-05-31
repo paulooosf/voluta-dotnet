@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Voluta.Models;
+using Voluta.Models.Auth;
+using BC = BCrypt.Net.BCrypt;
 
 namespace Voluta.Data
 {
@@ -74,6 +76,35 @@ namespace Voluta.Data
             modelBuilder.Entity<Ong>()
                 .Property(o => o.Telefone)
                 .HasMaxLength(15);
+
+            // Configurando o seed de dados
+            var adminUser = new Usuario
+            {
+                Id = 1,
+                Nome = "Admin",
+                Email = "admin@voluta.com",
+                Telefone = "(11) 99999-9999",
+                Disponivel = false,
+                DataCadastro = DateTime.Now,
+                SenhaHash = BC.HashPassword("Admin@123"),
+                Role = Roles.Admin,
+                AreasInteresse = new[] { AreaAtuacao.EducacaoEnsino }
+            };
+
+            var representanteUser = new Usuario
+            {
+                Id = 2,
+                Nome = "Representante ONG",
+                Email = "representante@ong.com",
+                Telefone = "(11) 88888-8888",
+                Disponivel = false,
+                DataCadastro = DateTime.Now,
+                SenhaHash = BC.HashPassword("Representante@123"),
+                Role = Roles.Representante,
+                AreasInteresse = new[] { AreaAtuacao.EducacaoEnsino }
+            };
+
+            modelBuilder.Entity<Usuario>().HasData(adminUser, representanteUser);
         }
     }
 } 
