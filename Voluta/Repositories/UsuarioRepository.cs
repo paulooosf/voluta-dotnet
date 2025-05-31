@@ -32,6 +32,7 @@ namespace Voluta.Repositories
             return await _context.Usuarios
                 .Include(u => u.SolicitacoesVoluntariado
                     .Where(s => s.Status == StatusSolicitacao.Pendente))
+                .Include(u => u.OngsVoluntario)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
@@ -52,10 +53,14 @@ namespace Voluta.Repositories
             var entry = _context.Entry(usuario);
             if (entry.State == EntityState.Detached)
             {
-                var existingUsuario = await _context.Usuarios.FindAsync(usuario.Id);
+                var existingUsuario = await _context.Usuarios
+                    .Include(u => u.OngsVoluntario)
+                    .FirstOrDefaultAsync(u => u.Id == usuario.Id);
+                    
                 if (existingUsuario != null)
                 {
                     _context.Entry(existingUsuario).CurrentValues.SetValues(usuario);
+                    existingUsuario.OngsVoluntario = usuario.OngsVoluntario;
                 }
             }
             

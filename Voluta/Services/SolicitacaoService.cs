@@ -5,6 +5,7 @@ using Voluta.Models;
 using Voluta.Repositories;
 using Voluta.ViewModels;
 using Voluta.Exceptions;
+using System.Collections.Generic;
 
 namespace Voluta.Services
 {
@@ -87,9 +88,29 @@ namespace Voluta.Services
             if (solicitacao.Status != StatusSolicitacao.Pendente)
                 throw new ErroNegocio("Apenas solicitações pendentes podem ser aprovadas");
 
+            var usuario = await _usuarioRepository.GetByIdAsync(solicitacao.UsuarioId);
+            if (usuario == null)
+                throw new ErroNaoEncontrado($"Usuário com ID {solicitacao.UsuarioId} não foi encontrado");
+
+            var ong = await _ongRepository.GetByIdAsync(solicitacao.OngId);
+            if (ong == null)
+                throw new ErroNaoEncontrado($"ONG com ID {solicitacao.OngId} não foi encontrada");
+
+            // Inicializa as coleções se necessário
+            if (usuario.OngsVoluntario == null)
+                usuario.OngsVoluntario = new List<Ong>();
+            if (ong.Voluntarios == null)
+                ong.Voluntarios = new List<Usuario>();
+
+            // Adiciona o relacionamento entre usuário e ONG
+            usuario.OngsVoluntario.Add(ong);
+            ong.Voluntarios.Add(usuario);
+
             solicitacao.Status = StatusSolicitacao.Aprovada;
             solicitacao.DataAprovacao = DateTime.Now;
 
+            await _usuarioRepository.UpdateAsync(usuario);
+            await _ongRepository.UpdateAsync(ong);
             await _solicitacaoRepository.UpdateAsync(solicitacao);
         }
 
