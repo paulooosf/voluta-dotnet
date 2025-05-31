@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Voluta.Data;
 using Voluta.Models;
+using System.Text.Json;
 
 namespace Voluta.Repositories
 {
@@ -83,9 +84,10 @@ namespace Voluta.Repositories
 
             if (areas?.Any() == true)
             {
+                var areasList = areas.Select(a => (int)a).ToList();
                 query = query.Where(u => 
                     u.AreasInteresseJson != null &&
-                    u.AreasInteresse.Any(ua => areas.Contains(ua)));
+                    areasList.Any(area => u.AreasInteresseJson.Contains(area.ToString())));
             }
 
             return await query
@@ -103,9 +105,10 @@ namespace Voluta.Repositories
 
             if (areas?.Any() == true)
             {
+                var areasList = areas.Select(a => (int)a).ToList();
                 query = query.Where(u => 
                     u.AreasInteresseJson != null &&
-                    u.AreasInteresse.Any(ua => areas.Contains(ua)));
+                    areasList.Any(area => u.AreasInteresseJson.Contains(area.ToString())));
             }
 
             return await query.CountAsync();
