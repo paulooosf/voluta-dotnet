@@ -178,14 +178,22 @@ namespace Voluta.Tests.Services
         public async Task AprovarSolicitacaoAsync_QuandoPendente_DeveAprovar()
         {
             // Arrange
+            var usuario = new Usuario { Id = 1, Nome = "Usuário Teste" };
+            var ong = new Ong { Id = 1, Nome = "ONG Teste" };
             var solicitacao = new SolicitacaoVoluntariado
             {
                 Id = 1,
+                UsuarioId = 1,
+                OngId = 1,
                 Status = StatusSolicitacao.Pendente
             };
 
             _solicitacaoRepositoryMock.Setup(r => r.GetByIdAsync(1))
                 .ReturnsAsync(solicitacao);
+            _usuarioRepositoryMock.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync(usuario);
+            _ongRepositoryMock.Setup(r => r.GetByIdAsync(1))
+                .ReturnsAsync(ong);
 
             // Act
             await _service.AprovarSolicitacaoAsync(1);
@@ -194,6 +202,8 @@ namespace Voluta.Tests.Services
             Assert.Equal(StatusSolicitacao.Aprovada, solicitacao.Status);
             Assert.NotNull(solicitacao.DataAprovacao);
             _solicitacaoRepositoryMock.Verify(r => r.UpdateAsync(solicitacao), Times.Once);
+            _usuarioRepositoryMock.Verify(r => r.UpdateAsync(usuario), Times.Once);
+            _ongRepositoryMock.Verify(r => r.UpdateAsync(ong), Times.Once);
         }
 
         [Fact]
