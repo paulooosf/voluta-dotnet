@@ -78,9 +78,23 @@ namespace Voluta.Data
                 .HasMaxLength(15);
 
             // Configurando o seed de dados
-            var adminUser = new Usuario
+
+            var user = new Usuario
             {
                 Id = 1,
+                Nome = "Usuario",
+                Email = "usuario@voluta.com",
+                Telefone = "(11) 99999-9999",
+                Disponivel = false,
+                DataCadastro = DateTime.Now,
+                SenhaHash = BC.HashPassword("Usuario@123"),
+                Role = Roles.Usuario,
+                AreasInteresse = new[] { AreaAtuacao.EducacaoEnsino }
+            };
+
+            var adminUser = new Usuario
+            {
+                Id = 2,
                 Nome = "Admin",
                 Email = "admin@voluta.com",
                 Telefone = "(11) 99999-9999",
@@ -93,7 +107,7 @@ namespace Voluta.Data
 
             var representanteUser = new Usuario
             {
-                Id = 2,
+                Id = 3,
                 Nome = "Representante ONG",
                 Email = "representante@ong.com",
                 Telefone = "(11) 88888-8888",
@@ -104,7 +118,7 @@ namespace Voluta.Data
                 AreasInteresse = new[] { AreaAtuacao.EducacaoEnsino }
             };
 
-            modelBuilder.Entity<Usuario>().HasData(adminUser, representanteUser);
+            modelBuilder.Entity<Usuario>().HasData(user, adminUser, representanteUser);
         }
     }
 } 

@@ -18,8 +18,9 @@ namespace Voluta.Migrations
                 columns: new[] { "Id", "AreasInteresseJson", "DataCadastro", "Disponivel", "Email", "Nome", "Role", "SenhaHash", "Telefone" },
                 values: new object[,]
                 {
-                    { 1, "[0]", new DateTime(2025, 5, 31, 13, 24, 46, 244, DateTimeKind.Local).AddTicks(6559), false, "admin@voluta.com", "Admin", 0, "$2a$11$jaVwxXX/oNn2BmFdmbnSOeGUknB3rlESw/Mfo0m/0KWJ8dx0tzbnW", "(11) 99999-9999" },
-                    { 2, "[0]", new DateTime(2025, 5, 31, 13, 24, 46, 346, DateTimeKind.Local).AddTicks(2167), false, "representante@ong.com", "Representante ONG", 2, "$2a$11$QgQ1Q9vlakxFwnn.N2h6LeedwQJPbN0/N72nvUV6oUpV/86ZAqQIu", "(11) 88888-8888" }
+                    { 1, "[0]", new DateTime(2025, 5, 31, 18, 22, 52, 587, DateTimeKind.Local).AddTicks(1451), false, "usuario@voluta.com", "Usuario", 1, "$2a$11$sM2r6Ennv1KTPT5sfgD5a.cB0H3iZqLA502MaTs02jZYfxhwy7ZaW", "(11) 99999-9999" },
+                    { 2, "[0]", new DateTime(2025, 5, 31, 18, 22, 52, 685, DateTimeKind.Local).AddTicks(2324), false, "admin@voluta.com", "Admin", 0, "$2a$11$4tkN3MP8BY1da1E5rW3HNeBVLe1kg65X9.usgpVVw0VCEGRktxgym", "(11) 99999-9999" },
+                    { 3, "[0]", new DateTime(2025, 5, 31, 18, 22, 52, 783, DateTimeKind.Local).AddTicks(7845), false, "representante@ong.com", "Representante ONG", 2, "$2a$11$bwCCxOrJPRuHzamsAGhAOuZGt8pAHP.zFeaJz2ORTEEGOw3gtfb6S", "(11) 88888-8888" }
                 });
         }
 
@@ -35,6 +36,11 @@ namespace Voluta.Migrations
                 table: "Usuarios",
                 keyColumn: "Id",
                 keyValue: 2);
+
+            migrationBuilder.DeleteData(
+                table: "Usuarios",
+                keyColumn: "Id",
+                keyValue: 3);
         }
     }
 }

@@ -190,24 +190,36 @@ namespace Voluta.Migrations
                         {
                             Id = 1,
                             AreasInteresseJson = "[0]",
-                            DataCadastro = new DateTime(2025, 5, 31, 13, 24, 46, 244, DateTimeKind.Local).AddTicks(6559),
+                            DataCadastro = new DateTime(2025, 5, 31, 18, 22, 52, 587, DateTimeKind.Local).AddTicks(1451),
                             Disponivel = false,
-                            Email = "admin@voluta.com",
-                            Nome = "Admin",
-                            Role = 0,
-                            SenhaHash = "$2a$11$jaVwxXX/oNn2BmFdmbnSOeGUknB3rlESw/Mfo0m/0KWJ8dx0tzbnW",
+                            Email = "usuario@voluta.com",
+                            Nome = "Usuario",
+                            Role = 1,
+                            SenhaHash = "$2a$11$sM2r6Ennv1KTPT5sfgD5a.cB0H3iZqLA502MaTs02jZYfxhwy7ZaW",
                             Telefone = "(11) 99999-9999"
                         },
                         new
                         {
                             Id = 2,
                             AreasInteresseJson = "[0]",
-                            DataCadastro = new DateTime(2025, 5, 31, 13, 24, 46, 346, DateTimeKind.Local).AddTicks(2167),
+                            DataCadastro = new DateTime(2025, 5, 31, 18, 22, 52, 685, DateTimeKind.Local).AddTicks(2324),
+                            Disponivel = false,
+                            Email = "admin@voluta.com",
+                            Nome = "Admin",
+                            Role = 0,
+                            SenhaHash = "$2a$11$4tkN3MP8BY1da1E5rW3HNeBVLe1kg65X9.usgpVVw0VCEGRktxgym",
+                            Telefone = "(11) 99999-9999"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AreasInteresseJson = "[0]",
+                            DataCadastro = new DateTime(2025, 5, 31, 18, 22, 52, 783, DateTimeKind.Local).AddTicks(7845),
                             Disponivel = false,
                             Email = "representante@ong.com",
                             Nome = "Representante ONG",
                             Role = 2,
-                            SenhaHash = "$2a$11$QgQ1Q9vlakxFwnn.N2h6LeedwQJPbN0/N72nvUV6oUpV/86ZAqQIu",
+                            SenhaHash = "$2a$11$bwCCxOrJPRuHzamsAGhAOuZGt8pAHP.zFeaJz2ORTEEGOw3gtfb6S",
                             Telefone = "(11) 88888-8888"
                         });
                 });
