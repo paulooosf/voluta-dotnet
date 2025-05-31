@@ -16,11 +16,9 @@ using Voluta.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuração do JWT
 var jwtConfig = builder.Configuration.GetSection("JwtConfig").Get<JwtConfig>();
 builder.Services.AddSingleton(jwtConfig);
 
-// Configuração da Autenticação
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,7 +41,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Adiciona os controllers e configura o filtro de validação
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<ValidationFilter>();
@@ -77,7 +74,6 @@ builder.Services.AddResponseCompression(options =>
     options.EnableForHttps = true;
 });
 
-// Registra todos os validadores automaticamente
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 builder.Services.AddDbContext<VolutaDbContext>(options =>
@@ -127,4 +123,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();

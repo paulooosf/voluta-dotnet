@@ -8,6 +8,7 @@ using Voluta.Configurations;
 using Voluta.Models;
 using Voluta.Models.Auth;
 using Voluta.Repositories;
+using Voluta.Exceptions;
 using BC = BCrypt.Net.BCrypt;
 
 namespace Voluta.Services
@@ -36,7 +37,7 @@ namespace Voluta.Services
             var usuario = await _usuarioRepository.GetByEmailAsync(request.Email);
             if (usuario == null || !VerificarSenha(request.Senha, usuario.SenhaHash))
             {
-                throw new Exception("Email ou senha inválidos");
+                throw new ErroValidacao("Email ou senha inválidos");
             }
 
             return GerarToken(usuario, usuario.Role);
