@@ -39,14 +39,7 @@ namespace Voluta.Services
                 throw new Exception("Email ou senha inválidos");
             }
 
-            // Por padrão, todos são usuários comuns
-            var role = Roles.Usuario;
-
-            // TODO: Implementar lógica para determinar a role do usuário
-            // Exemplo: Se o usuário estiver vinculado a uma ONG, será Representante
-            // Se o usuário tiver flag de admin, será Admin
-
-            return GerarToken(usuario, role);
+            return GerarToken(usuario, usuario.Role);
         }
 
         public string GerarToken(Usuario usuario, Roles role)
@@ -62,11 +55,12 @@ namespace Voluta.Services
                 new Claim(ClaimTypes.Role, role.ToString())
             };
 
+            var now = DateTime.UtcNow;
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                NotBefore = DateTime.UtcNow,
-                Expires = DateTime.UtcNow.AddMinutes(_jwtConfig.ExpiracaoMinutos),
+                NotBefore = now,
+                Expires = now.AddMinutes(_jwtConfig.ExpirationInMinutes).AddSeconds(1),
                 Issuer = _jwtConfig.Issuer,
                 Audience = _jwtConfig.Audience,
                 SigningCredentials = new SigningCredentials(
